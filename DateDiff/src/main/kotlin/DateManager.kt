@@ -56,25 +56,22 @@ object DateManager {
             if (i == 1 && isBisestile(date.year)) count++
             count += days_month[i++]
         }
-        val untilYear = date.year - 1
-        for (j in 1900..untilYear) {
-            count += when {
-                isBisestile(j) -> 366
-                else -> 365
-            }
-        }
+        count += (1900..date.year - 1).partition { isBisestile(it) }.let { p: Pair<List<Any>, List<Any>> -> Pair(p.first.size, p.second.size) }.let { p: Pair<Int, Int> -> p.first * 366 + p.second * 365 }
         return count
     }
 
     fun isBisestile(year: Int) = year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)
 
-    private fun buildDate(textDate: String): SimplyDate {
-        val split = textDate.split("/")
-        return SimplyDate(split[0].toInt(), split[1].toInt() - 1, split[2].toInt())
-    }
+    private fun buildDate(textDate: String) = SimplyDate.Builder(textDate.split("/"))
 
 }
 
-data class SimplyDate(val year: Int, val month: Int, val day: Int)
+data class SimplyDate(val year: Int, val month: Int, val day: Int) {
+    companion object Builder {
+        operator fun invoke(split: List<String>): SimplyDate {
+            return SimplyDate(split[0].toInt(), split[1].toInt() - 1, split[2].toInt())
+        }
+    }
+}
 
 data class MyDate(val years: Int, val months: Int, val days: Int, val total_days: Int, val negative: Boolean)
