@@ -1,3 +1,4 @@
+import java.util.function.IntBinaryOperator
 import kotlin.math.abs
 
 object DateManager {
@@ -51,12 +52,15 @@ object DateManager {
 
     fun countDays(date: SimplyDate): Int {
         var count = date.day - 1
-        var i = 0
-        while (i < date.month) {
-            if (i == 1 && isBisestile(date.year)) count++
-            count += days_month[i++]
-        }
-        count += (1900..date.year - 1).partition { isBisestile(it) }.let { p: Pair<List<Any>, List<Any>> -> Pair(p.first.size, p.second.size) }.let { p: Pair<Int, Int> -> p.first * 366 + p.second * 365 }
+
+        count += days_month.stream().limit(date.month.toLong()).mapToInt(Int::toInt).sum()
+        when { date.month > 1 && isBisestile(date.year) -> count++ }
+
+        count += (1900 until date.year)
+                .partition { isBisestile(it) }
+                .let { p: Pair<List<Any>, List<Any>> -> Pair(p.first.size, p.second.size) }
+                .let { p: Pair<Int, Int> -> p.first * 366 + p.second * 365 }
+
         return count
     }
 
