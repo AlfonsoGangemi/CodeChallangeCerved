@@ -1,0 +1,2 @@
+# CodeChallangeCerved
+Di cosa si tratta? Un modo per giocare, divertirsi ma sopratutto confrontarsi e collaborare nella soluzione di problemi informatici risolvibili con fantasia e astuzia. Periodicamente verranno proposti delle Challenge su cui tutti potranno cimentarsi e confrontarsi; e all'interno dei TechFridays insieme andremo ad approfondire le soluzioni,  votare e scegliere quella più geniale. In palio ci saranno ambitissimi premi!!!! 😱😱😱 Vuoi partecipare anche tu alla prossima Code Challenge?
