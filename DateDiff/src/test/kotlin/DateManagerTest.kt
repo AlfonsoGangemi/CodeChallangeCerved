@@ -25,13 +25,23 @@ internal class DateManager_DiffDate_Test {
 
     @Test
     fun diffDate3() {
+        val (years, months, days, total_days, negative) = DateManager.diffDate("1582/10/15", "1582/10/04")
+        assertEquals(0, years)
+        assertEquals(0, months)
+        assertEquals(1, days, "days")
+        assertEquals(1, total_days, "total_days")
+        assertEquals(true, negative)
+    }
+
+    @Test
+    fun diffDate13() {
         val diffDate = DateManager.diffDate("2020/03/29", "2017/07/03")
         assertEquals(1000,diffDate.total_days)
 
     }
 
     @Test
-    fun diffDate4() {
+    fun diffDate14() {
         val diffDate = DateManager.diffDate("2020/02/29", "2017/06/04")
         assertEquals(1000,diffDate.total_days)
     }
@@ -123,59 +133,93 @@ internal class DateManager_Build_Test {
         assertEquals(1, buildDays)
     }
 
+    @Test
+    fun buildDays5_1() {
+        val buildDays = DateManager.buildDays(SimplyDate(1582, 9, 4), SimplyDate(1582, 9, 3))
+        assertEquals(1, buildDays)
+    }
+    @Test
+    fun buildDays5_2() {
+        val buildDays = DateManager.buildDays(SimplyDate(1582, 9, 15), SimplyDate(1582, 9, 4))
+        assertEquals(1, buildDays)
+    }
+    @Test
+    fun buildDays5_3() {
+        val buildDays = DateManager.buildDays(SimplyDate(1582, 9, 16), SimplyDate(1582, 9, 15))
+        assertEquals(1, buildDays)
+    }
+
+    @Test
+    fun buildDays6() {
+        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 4), SimplyDate(1582, 9, 3))
+        assertEquals(1, buildDays)
+    }
+
+    @Test
+    fun buildDays7() {
+        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 4), SimplyDate(1582, 9, 4))
+        assertEquals(0, buildDays)
+    }
+
+    @Test
+    fun buildDays8() {
+        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 3), SimplyDate(1582, 9, 4))
+        assertEquals(20, buildDays)
+    }
+
 }
 
 internal class DateManager_CountDays_Test {
 
     @Test
     fun countDaysStart() {
-        val days = DateManager.countDays(SimplyDate(1900, 0, 1))
+        val days = DateManager.countDays(SimplyDate(1, 0, 1))
         assertEquals(0, days)
     }
 
     @Test
     fun countDaysOneYear() {
-        val days = DateManager.countDays(SimplyDate(1901, 0, 1))
+        val days = DateManager.countDays(SimplyDate(2, 0, 1))
         assertEquals(365, days)
     }
 
     @Test
     fun countDaysTwoYear() {
-        val days = DateManager.countDays(SimplyDate(1902, 0, 1))
+        val days = DateManager.countDays(SimplyDate(3, 0, 1))
         assertEquals(365+365, days)
     }
 
     @Test
     fun countDaysFourYear() {
-        val days = DateManager.countDays(SimplyDate(1905, 0, 1))
+        val days = DateManager.countDays(SimplyDate(6, 0, 1))
         assertEquals(365*5+1, days)
     }
 
     @Test
     fun countDaysOneMonth() {
-        val days = DateManager.countDays(SimplyDate(1900, 1, 1))
+        val days = DateManager.countDays(SimplyDate(1, 1, 1))
         assertEquals(31, days)
     }
 
     @Test
     fun countDaysTwoMonth() {
-        val days = DateManager.countDays(SimplyDate(1900, 2, 1))
+        val days = DateManager.countDays(SimplyDate(1, 2, 1))
         assertEquals(31+28, days)
     }
 
     @Test
     fun countDaysFourMonth() {
-        val days = DateManager.countDays(SimplyDate(1900, 4, 1))
+        val days = DateManager.countDays(SimplyDate(1, 4, 1))
         assertEquals(31+28+31+30, days)
     }
 
     @Test
     fun countDaysFourYearThreeMonthTwoDay() {
-        val days = DateManager.countDays(SimplyDate(1905, 3, 3))
+        val days = DateManager.countDays(SimplyDate(6, 3, 3))
         assertEquals(365*5+1+31+28+31+2, days)
     }
 
-    @Test
+//    @Test
     fun countDaysCustom() {
         val days = DateManager.countDays(SimplyDate(2019, 11, 31))
         print(days)
