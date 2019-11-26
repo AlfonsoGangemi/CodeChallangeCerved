@@ -1,3 +1,4 @@
+import java.util.function.BiFunction
 import kotlin.math.abs
 
 //fun main() {
@@ -17,43 +18,39 @@ object DateManager {
         val days1 = countDays(date1)
         val days2 = countDays(date2)
 
-        val years = when {
-            days1 > days2 -> buildYears(date1, date2)
-            else -> buildYears(date2, date1)
+        val dateBig = when {
+            days1 > days2 -> date1
+            else -> date2
         }
-        val months = when {
-            days1 > days2 -> buildMonths(date1, date2)
-            else -> buildMonths(date2, date1)
+        val dateSmall = when {
+            days1 > days2 -> date2
+            else -> date1
         }
-        val days = when {
-            days1 > days2 -> buildDays(date1, date2)
-            else -> buildDays(date2, date1)
-        }
+
+        val years = BiFunction { s:SimplyDate, b:SimplyDate ->
+            var innerYears = b.year - s.year
+            if (s.month > b.month
+                    || (s.month == b.month && s.day > b.day)) innerYears--
+            innerYears
+        }.apply(dateSmall, dateBig)
+
+        val months = BiFunction { s:SimplyDate, b:SimplyDate ->
+            var innerMonths = b.month - s.month
+            innerMonths.takeIf { x -> x < 0 }?.apply { innerMonths += 12 }
+//        if (months < 0) months += 12
+            if (s.day > b.day) innerMonths--
+            innerMonths
+        }.apply(dateSmall, dateBig)
+
+        val days = BiFunction { s:SimplyDate, b:SimplyDate ->
+            var innerDays = b.day - s.day
+            innerDays.takeIf { x -> x < 0 }?.apply { innerDays += days_month[s.month] }
+        //        if (days < 0) days += days_month[dateSmall.month]
+            if (months == 0 && GREGORIAN_START_DAYS in countDays(s) until countDays(b)) innerDays -= 10
+            innerDays
+        }.apply(dateSmall, dateBig)
 
         return MyDate(years, months, days, abs(days1 - days2), days1 > days2)
-    }
-
-    fun buildYears(dateBig: SimplyDate, dateSmall: SimplyDate): Int {
-        var years = dateBig.year - dateSmall.year
-        if (dateSmall.month > dateBig.month
-                || (dateSmall.month == dateBig.month && dateSmall.day > dateBig.day)) years--
-        return years
-    }
-
-    fun buildMonths(dateBig: SimplyDate, dateSmall: SimplyDate): Int {
-        var months = dateBig.month - dateSmall.month
-        months.takeIf { x -> x < 0 }?.apply { months += 12 }
-//        if (months < 0) months += 12
-        if (dateSmall.day > dateBig.day) months--
-        return months
-    }
-
-    fun buildDays(dateBig: SimplyDate, dateSmall: SimplyDate): Int {
-        var days = dateBig.day - dateSmall.day
-        days.takeIf { x -> x < 0 }?.apply { days += days_month[dateSmall.month] }
-//        if (days < 0) days += days_month[dateSmall.month]
-        if (buildMonths(dateBig, dateSmall) == 0 && GREGORIAN_START_DAYS in countDays(dateSmall) until countDays(dateBig)) days -= 10
-        return days
     }
 
     fun countDays(date: SimplyDate): Int {
