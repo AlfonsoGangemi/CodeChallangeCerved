@@ -1,4 +1,3 @@
-import java.util.function.BiFunction
 import kotlin.math.abs
 
 //fun main() {
@@ -19,33 +18,33 @@ object DateManager {
         val days2 = countDays(date2)
 
 
-        val (dateBig,dateSmall) = when {
-            days1 > days2 -> Pair(date1,date2)
-            else -> Pair(date2,date1)
+        val (dateBig, dateSmall) = when {
+            days1 > days2 -> Pair(date1, date2)
+            else -> Pair(date2, date1)
         }
 
-        val years = BiFunction { s:SimplyDate, b:SimplyDate ->
+        val years = { s: SimplyDate, b: SimplyDate ->
             var innerYears = b.year - s.year
             if (s.month > b.month
                     || (s.month == b.month && s.day > b.day)) innerYears--
             innerYears
-        }.apply(dateSmall, dateBig)
+        }(dateSmall, dateBig)
 
-        val months = BiFunction { s:SimplyDate, b:SimplyDate ->
+        val months = { s: SimplyDate, b: SimplyDate ->
             var innerMonths = b.month - s.month
             innerMonths.takeIf { x -> x < 0 }?.apply { innerMonths += 12 }
 //        if (months < 0) months += 12
             if (s.day > b.day) innerMonths--
             innerMonths
-        }.apply(dateSmall, dateBig)
+        }(dateSmall, dateBig)
 
-        val days = BiFunction { s:SimplyDate, b:SimplyDate ->
+        val days = { s: SimplyDate, b: SimplyDate ->
             var innerDays = b.day - s.day
             innerDays.takeIf { x -> x < 0 }?.apply { innerDays += days_month[s.month] }
-        //        if (days < 0) days += days_month[dateSmall.month]
+            //        if (days < 0) days += days_month[dateSmall.month]
             if (months == 0 && GREGORIAN_START_DAYS in countDays(s) until countDays(b)) innerDays -= 10
             innerDays
-        }.apply(dateSmall, dateBig)
+        }(dateSmall, dateBig)
 
         return MyDate(years, months, days, abs(days1 - days2), days1 > days2)
     }
