@@ -18,13 +18,10 @@ object DateManager {
         val days1 = countDays(date1)
         val days2 = countDays(date2)
 
-        val dateBig = when {
-            days1 > days2 -> date1
-            else -> date2
-        }
-        val dateSmall = when {
-            days1 > days2 -> date2
-            else -> date1
+
+        val (dateBig,dateSmall) = when {
+            days1 > days2 -> Pair(date1,date2)
+            else -> Pair(date2,date1)
         }
 
         val years = BiFunction { s:SimplyDate, b:SimplyDate ->

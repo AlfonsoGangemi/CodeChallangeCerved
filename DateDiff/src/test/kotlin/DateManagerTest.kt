@@ -47,6 +47,148 @@ internal class DateManager_DiffDate_Test {
     }
 }
 
+internal class DateManager_Build_Test {
+
+    @Test
+    fun buildYears1() {
+        val buildYears = DateManager.diffDate("2019/05/11", "2019/04/11").years
+//        val buildYears = DateManager.buildYears(SimplyDate(2019, 4, 11), SimplyDate(2019, 4, 11))
+        assertEquals(0, buildYears)
+    }
+
+    @Test
+    fun buildYears2() {
+        val buildYears = DateManager.diffDate("2020/05/11", "2019/06/11").years
+//        val buildYears = DateManager.buildYears(SimplyDate(2020, 4, 11), SimplyDate(2019, 5, 11))
+        assertEquals(0, buildYears)
+    }
+
+    @Test
+    fun buildYears3() {
+        val buildYears = DateManager.diffDate("2020/05/11", "2019/05/11").years
+//        val buildYears = DateManager.buildYears(SimplyDate(2020, 4, 11), SimplyDate(2019, 4, 11))
+        assertEquals(1, buildYears)
+    }
+
+    @Test
+    fun buildYears4() {
+        val buildYears = DateManager.diffDate("2020/05/11", "2019/05/21").years
+//        val buildYears = DateManager.buildYears(SimplyDate(2020, 4, 11), SimplyDate(2019, 4, 21))
+        assertEquals(0, buildYears)
+    }
+
+    @Test
+    fun buildYears5() {
+        val buildYears = DateManager.diffDate("2020/05/11", "2019/03/21").years
+//        val buildYears = DateManager.buildYears(SimplyDate(2020, 4, 11), SimplyDate(2019, 3, 21))
+        assertEquals(1, buildYears)
+    }
+
+    @Test
+    fun buildMonths1() {
+        val buildMonths = DateManager.diffDate("2019/05/11", "2019/05/11").months
+//        val buildMonths = DateManager.buildMonths(SimplyDate(2019, 4, 11), SimplyDate(2019, 4, 11))
+        assertEquals(0, buildMonths)
+    }
+
+    @Test
+    fun buildMonths2() {
+        val buildMonths = DateManager.diffDate("2019/05/11", "2019/04/21").months
+//        val buildMonths = DateManager.buildMonths(SimplyDate(2019, 4, 11), SimplyDate(2019, 3, 21))
+        assertEquals(0, buildMonths)
+    }
+
+    @Test
+    fun buildMonths3() {
+        val buildMonths = DateManager.diffDate("2019/05/21", "2019/04/21").months
+//        val buildMonths = DateManager.buildMonths(SimplyDate(2019, 4, 21), SimplyDate(2019, 3, 21))
+        assertEquals(1, buildMonths)
+    }
+
+    @Test
+    fun buildMonths4() {
+        val buildMonths = DateManager.diffDate("2020/03/21", "2019/07/21").months
+//        val buildMonths = DateManager.buildMonths(SimplyDate(2020, 2, 21), SimplyDate(2019, 6, 21))
+        assertEquals(8, buildMonths)
+    }
+
+    @Test
+    fun buildMonths5() {
+        val buildMonths = DateManager.diffDate("2020/03/21", "2019/07/23").months
+//        val buildMonths = DateManager.buildMonths(SimplyDate(2020, 2, 21), SimplyDate(2019, 6, 23))
+        assertEquals(7, buildMonths)
+    }
+
+    @Test
+    fun buildDays1() {
+        val buildDays = DateManager.diffDate("2019/05/11", "2019/05/11").days
+//        val buildDays = DateManager.buildDays(SimplyDate(2019, 4, 11), SimplyDate(2019, 4, 11))
+        assertEquals(0, buildDays)
+    }
+
+    @Test
+    fun buildDays2() {
+        val buildDays = DateManager.diffDate("2019/05/21", "2019/05/11").days
+//        val buildDays = DateManager.buildDays(SimplyDate(2019, 4, 21), SimplyDate(2019, 4, 11))
+        assertEquals(10, buildDays)
+    }
+
+    @Test
+    fun buildDays3() {
+        val buildDays = DateManager.diffDate("2019/06/11", "2019/05/21").days
+//        val buildDays = DateManager.buildDays(SimplyDate(2019, 5, 11), SimplyDate(2019, 4, 21))
+        assertEquals(21, buildDays)
+    }
+
+    @Test
+    fun buildDays4() {
+        val buildDays = DateManager.diffDate("2019/03/1", "2019/02/28").days
+//        val buildDays = DateManager.buildDays(SimplyDate(2019, 2, 1), SimplyDate(2019, 1, 28))
+        assertEquals(1, buildDays)
+    }
+
+    @Test
+    fun buildDays5_1() {
+        val buildDays = DateManager.diffDate("1582/10/04", "1582/10/03").days
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 9, 4), SimplyDate(1582, 9, 3))
+        assertEquals(1, buildDays)
+    }
+    @Test
+    fun buildDays5_2() {
+        val buildDays = DateManager.diffDate("1582/10/15", "1582/10/04").days
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 9, 15), SimplyDate(1582, 9, 4))
+        assertEquals(1, buildDays)
+    }
+    @Test
+    fun buildDays5_3() {
+        val buildDays = DateManager.diffDate("1582/10/16", "1582/10/15").days
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 9, 16), SimplyDate(1582, 9, 15))
+        assertEquals(1, buildDays)
+    }
+
+    @Test
+    fun buildDays6() {
+        val buildDays = DateManager.diffDate("1582/11/04", "1582/10/03").days
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 4), SimplyDate(1582, 9, 3))
+        assertEquals(1, buildDays)
+    }
+
+    @Test
+    fun buildDays7() {
+        val buildDays = DateManager.diffDate("1582/11/04", "1582/10/04").days
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 4), SimplyDate(1582, 9, 4))
+        assertEquals(0, buildDays)
+    }
+
+    @Test
+    fun buildDays8() {
+        val buildDays = DateManager.diffDate("1582/11/03", "1582/10/04").days
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 3), SimplyDate(1582, 9, 4))
+        assertEquals(20, buildDays)
+    }
+
+}
+
 internal class DateManager_CountDays_Test {
 
     @Test
@@ -97,7 +239,7 @@ internal class DateManager_CountDays_Test {
         assertEquals(365*5+1+31+28+31+2, days)
     }
 
-//    @Test
+    //    @Test
     fun countDaysCustom() {
         val days = DateManager.countDays(SimplyDate(2019, 11, 31))
         print(days)
