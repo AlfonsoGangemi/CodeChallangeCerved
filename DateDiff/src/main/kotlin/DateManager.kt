@@ -24,45 +24,46 @@ object DateManager {
         }
 
         val years = { s: SimplyDate, b: SimplyDate ->
-            var innerYears = b.year - s.year
-            if (s.month > b.month
-                    || (s.month == b.month && s.day > b.day)) innerYears--
-            innerYears
+            val innerYears = b.year - s.year
+            innerYears.takeIf {
+                (s.month > b.month
+                        || (s.month == b.month && s.day > b.day))
+            }?.let { it - 1 } ?: innerYears
         }(dateSmall, dateBig)
 
         val months = { s: SimplyDate, b: SimplyDate ->
-            var innerMonths = b.month - s.month
-            innerMonths.takeIf { x -> x < 0 }?.apply { innerMonths += 12 }
-//        if (months < 0) months += 12
-            if (s.day > b.day) innerMonths--
-            innerMonths
-        }(dateSmall, dateBig)
+            (b.month - s.month)
+                    .let { it.conditionalAdd(it < 0, 12) }
+                    .let { it.conditionalAdd(s.day > b.day, -1) }
+        }(dateSmall, dateBig)//3332331910
 
         val days = { s: SimplyDate, b: SimplyDate ->
-            var innerDays = b.day - s.day
-            innerDays.takeIf { x -> x < 0 }?.apply { innerDays += days_month[s.month] }
-            //        if (days < 0) days += days_month[dateSmall.month]
-            if (months == 0 && GREGORIAN_START_DAYS in countDays(s) until countDays(b)) innerDays -= 10
-            innerDays
+            (b.day - s.day)
+                    .let { it.conditionalAdd(it < 0, days_month[s.month]) }
+                    .let { it.conditionalAdd(months == 0 && GREGORIAN_START_DAYS in countDays(s) until countDays(b), -10) }
         }(dateSmall, dateBig)
 
         return MyDate(years, months, days, abs(days1 - days2), days1 > days2)
     }
 
     fun countDays(date: SimplyDate): Int {
-        var count = date.day - 1
+        var giorniGiorno = date.day - 1
 
-        count += days_month.stream().limit(date.month.toLong()).mapToInt(Int::toInt).sum()
-        if (date.month > 1 && isBisestile(date.year)) count++
+        val giorniMese = days_month
+                .stream()
+                .limit(date.month.toLong())
+                .mapToInt(Int::toInt)
+                .sum()
+                .let {
+                    it.conditionalAdd((date.month > 1 && isBisestile(date.year)), 1)
+                }
 
-        count += (1 until date.year)
+        val giorniAnno = (1 until date.year)
                 .partition { isBisestile(it) }
                 .let { p: Pair<List<Any>, List<Any>> -> Pair(p.first.size, p.second.size) }
                 .let { p: Pair<Int, Int> -> p.first * 366 + p.second * 365 }
 
-        if (count > GREGORIAN_START_DAYS) count -= 10
-
-        return count
+        return (giorniAnno + giorniMese + giorniGiorno).let { it.conditionalAdd( it > GREGORIAN_START_DAYS ,- 10 )}
     }
 
     fun isBisestile(year: Int) = year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)
@@ -70,6 +71,8 @@ object DateManager {
     private fun buildDate(textDate: String) = SimplyDate.Builder(textDate.split("/"))
 
 }
+
+private fun Int.conditionalAdd(condition: Boolean, valueAdd: Int): Int = this + if (condition) valueAdd else 0
 
 data class SimplyDate(val year: Int, val month: Int, val day: Int) {
     companion object Builder {

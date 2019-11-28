@@ -239,6 +239,13 @@ internal class DateManager_CountDays_Test {
         assertEquals(365*5+1+31+28+31+2, days)
     }
 
+    @Test
+    fun countOneYearDiff() {
+        val totalDays = DateManager.diffDate("2018/12/31", "2019/12/31").total_days
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 3), SimplyDate(1582, 9, 4))
+        assertEquals(365,totalDays )
+    }
+
     //    @Test
     fun countDaysCustom() {
         val days = DateManager.countDays(SimplyDate(2019, 11, 31))
