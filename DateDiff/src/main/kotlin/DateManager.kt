@@ -29,14 +29,14 @@ object DateManager {
 
         val months = { s: SimplyDate, b: SimplyDate ->
             (b.month - s.month)
-                    .run { conditionalAdd(this < 0, 12) }
-                    .run { conditionalAdd(s.day > b.day, -1) }
+                    .let { it.conditionalAdd(it < 0, 12) }
+                    .let { it.conditionalAdd(s.day > b.day, -1) }
         }(dateSmall, dateBig)
 
         val days = { s: SimplyDate, b: SimplyDate ->
             (b.day - s.day)
-                    .run { conditionalAdd(this < 0, days_month[s.month]) }
-                    .run { conditionalAdd(months == 0 && GREGORIAN_START_DAYS in countDays(s) until countDays(b), -10) }
+                    .let { it.conditionalAdd(it < 0, days_month[s.month]) }
+                    .let { it.conditionalAdd(months == 0 && GREGORIAN_START_DAYS in countDays(s) until countDays(b), -10) }
         }(dateSmall, dateBig)
 
         return MyDate(years, months, days, abs(days1 - days2), days1 > days2)
@@ -59,7 +59,7 @@ object DateManager {
                 .let { p: Pair<List<Any>, List<Any>> -> Pair(p.first.size, p.second.size) }
                 .let { p: Pair<Int, Int> -> p.first * 366 + p.second * 365 }
 
-        return (giorniAnno + giorniMese + giorniGiorno).run { conditionalAdd(this > GREGORIAN_START_DAYS, -10) }
+        return (giorniAnno + giorniMese + giorniGiorno).let { it.conditionalAdd(it > GREGORIAN_START_DAYS, -10) }
     }
 
     fun isBisestile(year: Int) = year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)
