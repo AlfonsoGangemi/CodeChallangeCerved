@@ -22,21 +22,21 @@ object DateManager {
             else -> Pair(date2, date1)
         }
 
-        val years = { s: SimplyDate, b: SimplyDate ->
-            (b.year - s.year)
-                    .conditionalAdd((s.month > b.month || (s.month == b.month && s.day > b.day)), -1)
+        val years = { small: SimplyDate, big: SimplyDate ->
+            (big.year - small.year)
+                    .conditionalAdd(-1, (small.month > big.month || (small.month == big.month && small.day > big.day)))
         }(dateSmall, dateBig)
 
-        val months = { s: SimplyDate, b: SimplyDate ->
-            (b.month - s.month)
-                    .let { it.conditionalAdd(it < 0, 12) }
-                    .let { it.conditionalAdd(s.day > b.day, -1) }
+        val months = { small: SimplyDate, big: SimplyDate ->
+            (big.month - small.month)
+                    .let { it.conditionalAdd(12, it < 0) }
+                    .run { conditionalAdd(-1, small.day > big.day) }
         }(dateSmall, dateBig)
 
-        val days = { s: SimplyDate, b: SimplyDate ->
-            (b.day - s.day)
-                    .let { it.conditionalAdd(it < 0, days_month[s.month]) }
-                    .let { it.conditionalAdd(months == 0 && GREGORIAN_START_DAYS in countDays(s) until countDays(b), -10) }
+        val days = { small: SimplyDate, big: SimplyDate ->
+            (big.day - small.day)
+                    .let { it.conditionalAdd(days_month[small.month], it < 0) }
+                    .run { conditionalAdd(-10, months == 0 && GREGORIAN_START_DAYS in countDays(small) until countDays(big)) }
         }(dateSmall, dateBig)
 
         return MyDate(years, months, days, abs(days1 - days2), days1 > days2)
@@ -51,7 +51,7 @@ object DateManager {
                 .mapToInt(Int::toInt)
                 .sum()
                 .run {
-                    conditionalAdd((date.month > 1 && isBisestile(date.year)), 1)
+                    conditionalAdd(1, (date.month > 1 && isBisestile(date.year)))
                 }
 
         val giorniAnno = (1 until date.year)
@@ -59,7 +59,7 @@ object DateManager {
                 .let { p: Pair<List<Any>, List<Any>> -> Pair(p.first.size, p.second.size) }
                 .let { p: Pair<Int, Int> -> p.first * 366 + p.second * 365 }
 
-        return (giorniAnno + giorniMese + giorniGiorno).let { it.conditionalAdd(it > GREGORIAN_START_DAYS, -10) }
+        return (giorniAnno + giorniMese + giorniGiorno).let { it.conditionalAdd(-10, it > GREGORIAN_START_DAYS) }
     }
 
     fun isBisestile(year: Int) = year % 400 == 0 || (year % 100 != 0 && year % 4 == 0)
@@ -68,9 +68,10 @@ object DateManager {
 
 }
 
-private fun Int.conditionalAdd(condition: Boolean, valueAdd: Int): Int = this + if (condition) valueAdd else 0
+private fun Int.conditionalAdd(value2Add: Int, condition: Boolean): Int = this + if (condition) value2Add else 0
 
 data class SimplyDate(val year: Int, val month: Int, val day: Int) {
+
     companion object Builder {
         operator fun invoke(split: List<String>): SimplyDate {
             return SimplyDate(split[0].toInt(), split[1].toInt() - 1, split[2].toInt())
