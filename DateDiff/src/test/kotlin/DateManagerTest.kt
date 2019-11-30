@@ -193,49 +193,49 @@ internal class DateManager_CountDays_Test {
 
     @Test
     fun countDaysStart() {
-        val days = DateManager.countDays(SimplyDate(1, 0, 1))
+        val days = SimplyDate.Builder(listOf("1", "1", "1")).countDays
         assertEquals(0, days)
     }
 
     @Test
     fun countDaysOneYear() {
-        val days = DateManager.countDays(SimplyDate(2, 0, 1))
+        val days = SimplyDate.Builder(listOf("2", "1", "1")).countDays
         assertEquals(365, days)
     }
 
     @Test
     fun countDaysTwoYear() {
-        val days = DateManager.countDays(SimplyDate(3, 0, 1))
+        val days = SimplyDate.Builder(listOf("3", "1", "1")).countDays
         assertEquals(365+365, days)
     }
 
     @Test
     fun countDaysFourYear() {
-        val days = DateManager.countDays(SimplyDate(6, 0, 1))
+        val days = SimplyDate.Builder(listOf("6", "1", "1")).countDays
         assertEquals(365*5+1, days)
     }
 
     @Test
     fun countDaysOneMonth() {
-        val days = DateManager.countDays(SimplyDate(1, 1, 1))
+        val days = SimplyDate.Builder(listOf("1", "2", "1")).countDays
         assertEquals(31, days)
     }
 
     @Test
     fun countDaysTwoMonth() {
-        val days = DateManager.countDays(SimplyDate(1, 2, 1))
+        val days = SimplyDate.Builder(listOf("1", "3", "1")).countDays
         assertEquals(31+28, days)
     }
 
     @Test
     fun countDaysFourMonth() {
-        val days = DateManager.countDays(SimplyDate(1, 4, 1))
+        val days = SimplyDate.Builder(listOf("1", "5", "1")).countDays
         assertEquals(31+28+31+30, days)
     }
 
     @Test
     fun countDaysFourYearThreeMonthTwoDay() {
-        val days = DateManager.countDays(SimplyDate(6, 3, 3))
+        val days = SimplyDate.Builder(listOf("6", "4", "3")).countDays
         assertEquals(365*5+1+31+28+31+2, days)
     }
 
@@ -248,7 +248,7 @@ internal class DateManager_CountDays_Test {
 
     //    @Test
     fun countDaysCustom() {
-        val days = DateManager.countDays(SimplyDate(2019, 11, 31))
+        val days = SimplyDate.Builder(listOf("2019", "12", "31")).countDays
         print(days)
     }
 
@@ -258,25 +258,25 @@ internal class DateManager_IsBisestile_Test {
 
     @Test
     fun isBisestile400() {
-        val bisestile = DateManager.isBisestile(2000)
+        val bisestile = SimplyDate.isBisestile(2000)
         assertEquals(true,bisestile)
     }
 
     @Test
     fun isBisestile100() {
-        val bisestile = DateManager.isBisestile(1900)
+        val bisestile = SimplyDate.isBisestile(1900)
         assertEquals(false,bisestile)
     }
 
     @Test
     fun isBisestile4() {
-        val bisestile = DateManager.isBisestile(1920)
+        val bisestile = SimplyDate.isBisestile(1920)
         assertEquals(true,bisestile)
     }
 
     @Test
     fun isBisestile123() {
-        val bisestile = DateManager.isBisestile(2023)
+        val bisestile = SimplyDate.isBisestile(2023)
         assertEquals(false,bisestile)
     }
 }
