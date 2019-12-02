@@ -32,7 +32,7 @@ object DateManager {
         val days = { prec: SimplyDate, succ: SimplyDate ->
             (succ.day - prec.day)
                     .let { it.conditionalAdd(SimplyDate.days_month[prec.month], it < 0) }
-                    .run { conditionalAdd(-10, months == 0 && GREGORIAN_START_DAYS in prec.countDays until succ.countDays) }
+                    .run { conditionalAdd(-10, prec.year == 1582 && prec.year == succ.year && months == 0 && GREGORIAN_START_DAYS in prec.countDays until succ.countDays) }
         }(datePrec, dateSucc)
 
         return MyDate(years, months, days, abs(date1.countDays - date2.countDays), date1.countDays > date2.countDays)

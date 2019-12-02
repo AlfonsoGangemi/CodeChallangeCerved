@@ -34,6 +34,15 @@ internal class DateManager_DiffDate_Test {
     }
 
     @Test
+    fun diffDate4() {
+        val (years, months, days, _, _) = DateManager.diffDate("1082/11/03", "2082/11/04")
+//        val buildDays = DateManager.buildDays(SimplyDate(1582, 10, 3), SimplyDate(1582, 9, 4))
+        assertEquals(1000, years)
+        assertEquals(0, months)
+        assertEquals(1, days, "days")
+    }
+
+    @Test
     fun diffDate13() {
         val diffDate = DateManager.diffDate("2020/03/29", "2017/07/03")
         assertEquals(1000,diffDate.total_days)
